@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ book['title'] }}{% endblock %}
+{% block content %}
+<h2>{{ book['title'] }}</h2>
+<p><b>Автор:</b> {{ book['author'] }}</p>
+<p><b>Категория:</b> {{ book['category'] }}</p>
+<p><b>Год:</b> {{ book['year'] }}</p>
+<p><b>Цена:</b> {{ book['price'] }}₽</p>
+<p><b>Статус:</b> {{ book['status'] }}</p>
+
+{% if session.get('username') %}
+  {% if book['status'] == 'available' %}
+  <form method="POST" action="{{ url_for('rent', book_id=book['id']) }}">
+    <label>Аренда:</label>
+    <select name="period">
+      <option value="2weeks">2 недели</option>
+      <option value="1month">1 месяц</option>
+      <option value="3months">3 месяца</option>
+    </select>
+    <button type="submit">Взять в аренду</button>
+  </form>
+
+  <form method="POST" action="{{ url_for('buy', book_id=book['id']) }}">
+    <button type="submit">Купить</button>
+  </form>
+  {% else %}
+    <p><i>Книга недоступна для аренды или покупки</i></p>
+  {% endif %}
+  <p><a href="{{ url_for('index') }}">← Назад к списку</a></p>
+{% else %}
+  <p><a href="{{ url_for('login') }}">Войдите, чтобы арендовать или купить</a></p>
+{% endif %}
+{% endblock %}

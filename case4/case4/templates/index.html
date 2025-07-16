@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<h1>Книжная лавка</h1>
+
+<p>Фильтры:</p>
+<form method="GET">
+  Категория:
+  <select name="category">
+    <option value="">Все</option>
+    {% for c in categories %}
+      <option value="{{c}}" {% if request.args.get('category')==c %}selected{% endif %}>{{c}}</option>
+    {% endfor %}
+  </select>
+  Автор:
+  <select name="author">
+    <option value="">Все</option>
+    {% for a in authors %}
+      <option value="{{a}}" {% if request.args.get('author')==a %}selected{% endif %}>{{a}}</option>
+    {% endfor %}
+  </select>
+  Год:
+  <select name="year">
+    <option value="">Все</option>
+    {% for y in years %}
+      <option value="{{y}}" {% if request.args.get('year')==y|string %}selected{% endif %}>{{y}}</option>
+    {% endfor %}
+  </select>
+  <button>Применить</button>
+</form>
+
+<ul>
+  {% for book in books %}
+    <li>
+      <a href="{{ url_for('book_detail', book_id=book['id']) }}">{{ book['title'] }}</a> — {{ book['author'] }} ({{ book['year'] }}) — {{ book['category'] }} — {{ book['price'] }}₽
+    </li>
+  {% else %}
+    <li>Книг не найдено.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
